@@ -38,15 +38,15 @@ ${kubectl_cmd} create secret generic minio-creds \
   --from-literal=MINIO_SECRET_KEY=${ACCESS_SECRET_KEY}
 
 print_info "Create the Object Store Configuration \n"
-envsubst < templates/minio-template.yaml > yaml/minio.yaml
+envsubst < templates/minio-template.yaml > $TMP/minio.yaml
 #export ip=`ifconfig en0 inet | awk '/inet6/ {next} /inet/ {print $2}'`
 #sed -i 's/#IP#/'${ip}'/' yaml/minio.yaml
 
 print_info "Configuration:\n"
-cat yaml/minio.yaml
+cat $TMP/minio.yaml
 
 sleep 5
 
 print_command "${kubectl_cmd} create apply -f yaml/minio.yaml\n"
 
-${kubectl_cmd} apply -f yaml/minio.yaml
+${kubectl_cmd} apply -f $TMP/minio.yaml

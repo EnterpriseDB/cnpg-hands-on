@@ -1,6 +1,5 @@
 #!/bin/bash
 
-source ./config.sh 
 source ./replica.sh
 
 i=$1

@@ -2,10 +2,6 @@
 
 source ./config.sh
 
-rm -rf ${HOME}/cnpg
-mkdir -p ${HOME}/cnpg 
-chmod 755 ${HOME}/cnpg 
-
 print_info "Install cnpg plugin\n"
 
 print_command "curl -sSfL \

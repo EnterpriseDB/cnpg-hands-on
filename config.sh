@@ -5,6 +5,10 @@
 
 source ./commands.sh
 
+export TMP=/tmp/cnpg-files
+[ -d $TMP ] || mkdir $TMP
+echo "Find the YAML-files in $TMP"
+
 #set OS platform
 export os_platform=$(uname)
 
