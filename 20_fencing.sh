@@ -13,6 +13,6 @@ case $i in
     ${kubectl_cnp} fencing ${i} ${cluster_name} ${replica}
     ;;
   *)
-    print_command "Wrong argument"
+    echo "usage: $0 on|off"
     exit
 esac

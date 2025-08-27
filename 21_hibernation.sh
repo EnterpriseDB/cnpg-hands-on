@@ -13,6 +13,6 @@ case $i in
     ${kubectl_cmd} annotate cluster ${cluster_name} --overwrite cnpg.io/hibernation=${i}
     ;;
   *)
-    echo "Wrong argument"
+    echo "usage: $0 on|off"
     exit
 esac

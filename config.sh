@@ -3,7 +3,8 @@
 #git_directory=`git rev-parse --show-toplevel`
 #. ${git_directory}/commands.sh
 
-source ./commands.sh
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $DIR/commands.sh
 
 export TMP=/tmp/cnpg-files
 [ -d $TMP ] || mkdir $TMP
