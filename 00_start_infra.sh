@@ -57,4 +57,4 @@ helm upgrade --install \
   prometheus-community \
   prometheus-community/kube-prometheus-stack
 
-print_info "\n\n${red}Please run './start_minio_.docker_server.sh &' in a new terminal before proceeding!\n"
+print_info "\n\n${red}Please run './start_minio_docker_server.sh &' in a new terminal before proceeding!\n"
