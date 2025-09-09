@@ -5,10 +5,9 @@ source ./config.sh
 print_info "Check docker running?\n"
 
 print_command "docker ps > /dev/null 2>&1\n"
-docker ps > /dev/null 2>&1 
 
+docker ps > /dev/null 2>&1 
 if [ $? -ne 0 ]
-# Start Docker
 then
   print_info "Docker is not running\n"
   if [[ "${os_platform}" == "Darwin" ]]
@@ -29,20 +28,26 @@ else
    print_info "Docker is running...\n"
 fi
 
-print_info "Starting k3d cluster\n"
-k3d cluster delete
-#k3d cluster create --servers 1 --agents 4
-print_command "k3d cluster create\n"
-k3d cluster create
-#k3d cluster start
+print_info "Starting $k8s_tool cluster\n"
 
-#./docker_pull_images.sh
-#./k3d_import_images.sh
+case $k8s_tool in
+	k3d)
+		$k8s_tool cluster delete $k8s_cluster_name
+		$k8s_tool cluster create $k8s_cluster_name
+		;;
+	kind)
+		$k8s_tool delete cluster --name $k8s_cluster_name
+		$k8s_tool create cluster --name $k8s_cluster_name
+		;;
+	*)
+		echo "Invalid k8s_tool options. Exiting"
+		exit -1
+		;;
+esac
 
 print_info "\nInstalling prometheus...\n"
 print_command "\nhelm repo add prometheus-community \
   https://prometheus-community.github.io/helm-charts\n"
-
 
 helm repo add prometheus-community \
   https://prometheus-community.github.io/helm-charts

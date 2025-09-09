@@ -2,7 +2,19 @@ source ./config.sh
 
 print_info "Stop k3d cluster\n"
 print_command "k3d cluster delete\n"
-k3d cluster delete
+case $k8s_tool in
+	k3d)
+			
+		$k8s_tool cluster delete $k8s_cluster_name
+		;;
+	kind)
+		$k8s_tool delete cluster --name $k8s_cluster_name
+		;;
+	*)
+		echo "Invalid k8s_tool options. Exiting"
+		exit -1
+		;;
+esac
 
 if [[ "${os_platform}" == "Darwin" ]]
 then
@@ -18,4 +30,4 @@ fi
 
 print_info "Delete all yaml files\n"
 print_command "rm -ef yaml/*\n"
-rm -rf yaml/*
+rm -rf $TMP

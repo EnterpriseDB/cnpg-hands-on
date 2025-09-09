@@ -13,6 +13,9 @@ echo "Find the YAML-files in $TMP"
 #set OS platform
 export os_platform=$(uname)
 
+export k8s_tool="kind" # valid options: "k3d" or "kind"
+export k8s_cluster_name="cnpg-workshop"
+
 # Variables to be replaced
 #export id="$(oc whoami)"          # your name or id
 #export region="emea"              # emea,na,apj
