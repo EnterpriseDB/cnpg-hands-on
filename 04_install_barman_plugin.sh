@@ -47,6 +47,6 @@ cat $TMP/minio.yaml
 
 sleep 5
 
-print_command "${kubectl_cmd} create apply -f yaml/minio.yaml\n"
+print_command "${kubectl_cmd} apply -f $TMP/minio.yaml\n"
 
 ${kubectl_cmd} apply -f $TMP/minio.yaml
