@@ -1,0 +1,24 @@
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: object-storage-us
+spec:
+  retentionPolicy: "${barman_retention_policy}"
+  configuration:
+    destinationPath: ${s3_bucket}
+    azureCredentials:
+      connectionString:
+        name: azure-creds
+        key: AZURE_CONNECTION_STRING
+      storageAccount:
+        name: azure-creds
+        key: AZURE_STORAGE_ACCOUNT
+      storageKey:
+        name: azure-creds
+        key: AZURE_STORAGE_KEY
+      storageSasToken:
+        name: azure-creds
+        key: AZURE_STORAGE_SAS_TOKEN
+    wal:
+      compression: gzip
+      encryption: AES256

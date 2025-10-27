@@ -65,7 +65,3 @@ spec:
     limits:
       memory: "${postgres_max_memory}"
       cpu: "${postgres_max_cpu}"
-
-  #affinity:
-  #  nodeSelector:
-  #    workload: dc1

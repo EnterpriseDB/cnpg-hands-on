@@ -1,0 +1,93 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: pg-us
+spec:
+  instances: 1
+  #imageName: ghcr.io/cloudnative-pg/postgresql:18-standard-bookworm
+  imageName: "$postgres_default_image"
+
+  storage:
+    size: 1Gi
+
+  # See https://cloudnative-pg.io/documentation/current/storage/#volume-for-wal
+  walStorage:
+    size: 1Gi
+
+  # See https://cloudnative-pg.io/documentation/current/recovery/
+  bootstrap:
+    pg_basebackup:
+    #recovery:
+      source: pg-eu
+  
+  # Define it as a replica cluster
+  replica:
+    enabled: true
+    source: pg-eu
+
+  postgresql:
+    # See https://cloudnative-pg.io/documentation/current/postgresql_conf/#the-postgresql-section
+    parameters:
+      # Some very basic Postgres settings
+      max_connections: '100'
+      log_checkpoints: 'on'
+      log_lock_waits: 'on'
+      pg_stat_statements.max: '10000'
+      pg_stat_statements.track: 'all'
+      hot_standby_feedback: 'on'
+      # Container images work fine with sysv shared memory
+      #shared_memory_type: 'sysv'
+      #dynamic_shared_memory_type: 'sysv'
+
+  plugins:
+  - name: barman-cloud.cloudnative-pg.io
+    isWALArchiver: true
+    parameters:
+      barmanObjectName: object-storage-us
+      serverName: pg-us
+
+  externalClusters:
+  - name: pg-eu
+    connectionParameters:
+      host: pg-eu-rw
+      user: streaming_replica
+      sslmode: verify-full
+      dbname: postgres
+    # NOTE: if this cluster is created in a different namespace than the main cluster
+    # remember to create the `-replication` and `-ca` secrets in the follower namespace
+    # before creating the follower cluster
+    sslKey:
+      name: pg-eu-replication
+      key: tls.key
+    sslCert:
+      name: pg-eu-replication
+      key: tls.crt
+    sslRootCert:
+      name: pg-eu-ca
+      key: ca.crt
+    plugin:
+      name: barman-cloud.cloudnative-pg.io
+      parameters:
+        barmanObjectName: object-storage-eu
+        serverName: pg-eu
+  - name: pg-us
+    plugin:
+      name: barman-cloud.cloudnative-pg.io
+      parameters:
+        barmanObjectName: object-storage-us
+        serverName: pg-us
+---
+# See https://cloudnative-pg.io/documentation/current/backup/#scheduled-backups
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: pg-us-backup
+spec:
+  method: plugin
+  schedule: '0 0 0 * * *'
+  backupOwnerReference: self
+  cluster:
+    name: pg-us
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
+  immediate: true
