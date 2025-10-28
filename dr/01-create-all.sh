@@ -11,8 +11,9 @@ kubectl apply -f ./tmp/object-storage-eu.yaml
 sleep 2
 rm -f ./tmp/pg-eu.yaml
 envsubst < ../templates/dr/pg-eu.yaml > ./tmp/pg-eu.yaml
+print_info "Creating pg-eu cluster...\n"
 kubectl apply -f ./tmp/pg-eu.yaml
-kubectl  wait --timeout=30m --for=condition=Ready cluster/pg-eu
+print_info "pg-eu cluster created.\n"
 
 # US
 kubectl delete objectstores.barmancloud.cnpg.io object-storage-us
@@ -21,4 +22,8 @@ kubectl apply -f ./tmp/object-storage-us.yaml
 sleep 2
 rm -f ./tmp/pg-us.yaml
 envsubst < ../templates/dr/pg-us.yaml > ./tmp/pg-us.yaml
+kubectl  wait --timeout=30m --for=condition=Ready cluster/pg-eu
+print_info "Creating pg-us cluster...\n"
 kubectl apply -f ./tmp/pg-us.yaml
+./backup_cluster.sh pg-eu
+print_info "pg-us cluster created.\n"

@@ -4,7 +4,6 @@ metadata:
   name: pg-us
 spec:
   instances: 1
-  #imageName: ghcr.io/cloudnative-pg/postgresql:18-standard-bookworm
   imageName: "$postgres_default_image"
 
   storage:
@@ -17,9 +16,11 @@ spec:
   # See https://cloudnative-pg.io/documentation/current/recovery/
   bootstrap:
     pg_basebackup:
-    #recovery:
       source: pg-eu
   
+  monitoring:
+    enablePodMonitor: true
+
   # Define it as a replica cluster
   replica:
     enabled: true
@@ -36,8 +37,8 @@ spec:
       pg_stat_statements.track: 'all'
       hot_standby_feedback: 'on'
       # Container images work fine with sysv shared memory
-      #shared_memory_type: 'sysv'
-      #dynamic_shared_memory_type: 'sysv'
+      shared_memory_type: 'sysv'
+      dynamic_shared_memory_type: 'sysv'
 
   plugins:
   - name: barman-cloud.cloudnative-pg.io
