@@ -8,7 +8,7 @@ print_command "${kubectl_cmd} apply -f \
   https://github.com/cert-manager/cert-manager/releases/download/${cert_manager_version=}/cert-manager.yaml\n"
 
 ${kubectl_cmd} apply -f \
-  https://github.com/cert-manager/cert-manager/releases/download/${cert_manager_version=}/cert-manager.yaml
+  https://github.com/cert-manager/cert-manager/releases/download/${cert_manager_version}/cert-manager.yaml
 
 i=10
 
