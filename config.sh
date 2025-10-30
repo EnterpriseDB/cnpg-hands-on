@@ -8,10 +8,8 @@
 # ╰──────────────────────────────╯
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-echo "DIR: $DIR"
 export TMP=${DIR}/tmp
-echo "TMP: $TMP"
-#[ -d $TMP ] || mkdir $TMP
+[ -d $TMP ] || mkdir $TMP
 source ./commands.sh
 
 echo ""

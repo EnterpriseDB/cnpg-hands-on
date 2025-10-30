@@ -1,5 +1,6 @@
 # CNPG demo
 
+Welcome to cnpg-hands-on demo. This environment has been created for demos of CloudNativePG.
 CNPG version tested is 1.27.1.
 
 # Demo on MacOS and Linux prerequisites
