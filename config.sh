@@ -21,7 +21,7 @@ echo ""
 # ╰──────────────────────────────╯
 
 export os_platform=$(uname)
-export k8s_tool="kind" # valid options: "k3d" or "kind"
+export k8s_tool="k3d" # valid options: "k3d" or "kind"
 export k8s_cluster_name="cnpg-workshop"
 
 # ╭──────────────────────────────╮
@@ -84,7 +84,7 @@ export epas_storage="512Mi"
 # ╰──────────────────────────────╯
 
 # Object Storage environment [minio|aws|azure]
-export object_storage_type="azure"
+export object_storage_type="minio"
 
 if [ "$object_storage_type" = "minio" ]; then
 
