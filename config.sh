@@ -28,6 +28,7 @@ export k8s_cluster_name="cnpg-workshop"
 # │    Kubernetes environment    │
 # ╰──────────────────────────────╯
 #export namespace="edb-${region}-${id}"   # k8s namespace
+export namespace="default"
 export kubectl_cmd="kubectl"    # could be kubectl|oc
 export kubectl_cnp="kubectl-cnpg"
 
