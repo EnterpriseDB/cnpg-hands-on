@@ -55,8 +55,9 @@ spec:
     storage:
       size: $postgres_tmp_storage
 
-  monitoring:
-    enablePodMonitor: true
+  # Deprecated
+  #monitoring:
+  #  enablePodMonitor: true
 
   resources:
     requests:

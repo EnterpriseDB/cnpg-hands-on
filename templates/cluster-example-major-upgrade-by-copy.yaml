@@ -37,5 +37,5 @@ spec:
       memory: "${postgres_memory}"
       cpu: "${postgres_cpu}"
 
-  monitoring:
-    enablePodMonitor: true
+  #monitoring:
+  #  enablePodMonitor: true
