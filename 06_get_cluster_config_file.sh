@@ -2,11 +2,10 @@
 
 source ./config.sh
 
-# Doc
-echo 06 > ./docs/docid
+envsubst < templates/${cluster_name_template}-template.yaml > $TMP/${cluster_name}.yaml
 
-envsubst < templates/${cluster_name}-template.yaml > $TMP/${cluster_name}.yaml
-
+echo ""
+print_info "Please, run this command:\n"
 print_command "cat $TMP/${cluster_name}.yaml\n"
-cat $TMP/${cluster_name}.yaml
+echo ""
 

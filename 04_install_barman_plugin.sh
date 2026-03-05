@@ -2,6 +2,8 @@
 
 source ./config.sh
 
+# Install cert-manager
+print_info "\n"
 print_info  "\nInstallation Cert-Manager...\n"
 
 print_command "${kubectl_cmd} apply -f \
@@ -10,15 +12,15 @@ print_command "${kubectl_cmd} apply -f \
 ${kubectl_cmd} apply -f \
   https://github.com/cert-manager/cert-manager/releases/download/${cert_manager_version}/cert-manager.yaml
 
-i=10
+# Wait for the deployments to be ready
+print_info "\n"
+print_info "Waiting for cert-manager to be ready...\n"
+#${kubectl_cmd} wait --for=condition=Available deployment --all -n cert-manager --timeout=300s
+${kubectl_cmd} rollout status deployment -n cert-manager
+cmctl check api --wait=2m
 
-while [ $i -gt 0 ]
-do
-   print_info "waiting $i seconds...\n"
-   i=`expr ${i} - 5`
-   sleep 5
-done
-
+# Install barman plugin
+print_info "\n"
 print_info  "Installation Barman-Plugin...\n"
 
 print_command "${kubectl_cmd} apply -f \
@@ -27,71 +29,8 @@ print_command "${kubectl_cmd} apply -f \
 ${kubectl_cmd} apply -f \
         https://github.com/cloudnative-pg/plugin-barman-cloud/releases/download/${plugin_barman_version}/manifest.yaml
 
-print_info "Create the Object Store Configuration \n"
-
-# Object Storage check
-if [ "$object_storage_type" = "minio" ]; then
-
-  print_info "Create the Minio Secret...\n"
-
-  kubectl delete secret minio-creds --ignore-not-found
-
-  print_command "${kubectl_cmd} create secret generic minio-creds \
-    --from-literal=MINIO_ACCESS_KEY=${ACCESS_KEY_ID} \
-    --from-literal=MINIO_SECRET_KEY=${ACCESS_SECRET_KEY}\n"
-
-  ${kubectl_cmd} create secret generic minio-creds \
-    --from-literal=MINIO_ACCESS_KEY=${ACCESS_KEY_ID} \
-    --from-literal=MINIO_SECRET_KEY=${ACCESS_SECRET_KEY}
-
-  envsubst < templates/minio-template.yaml > "$TMP/object_storage.yaml"
-
-elif [ "$object_storage_type" = "aws" ]; then
-
-  print_info "Create the AWS Secret...\n"
-  
-  kubectl delete secret aws-creds --ignore-not-found
-
-  print_info "  kubectl create secret generic aws-creds \
-    --from-literal=ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
-    --from-literal=ACCESS_SECRET_KEY=${AWS_SECRET_ACCESS_KEY} \
-    --from-literal=ACCESS_SESSION_TOKEN=${AWS_SESSION_TOKEN}\n"
-
-  ${kubectl_cmd} create secret generic aws-creds \
-    --from-literal=ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" \
-    --from-literal=ACCESS_SECRET_KEY="$AWS_SECRET_ACCESS_KEY" \
-    --from-literal=ACCESS_SESSION_TOKEN="$AWS_SESSION_TOKEN"
-
-  envsubst < templates/aws-template.yaml > $TMP/object_storage.yaml
-
-elif [ "$object_storage_type" = "azure" ]; then
-
-  print_info "Create the Azure Secret...\n"
-
-  kubectl delete secret azure-creds --ignore-not-found
-
-  export s3_bucket="${s3_bucket}"
-
-  export AZURE_STORAGE_ACCOUNT="${AZURE_STORAGE_ACCOUNT}"
-  export AZURE_STORAGE_KEY="${AZURE_STORAGE_KEY}"
-  export AZURE_STORAGE_SAS_TOKEN="${AZURE_STORAGE_SAS_TOKEN}"
-  export AZURE_CONNECTION_STRING="${AZURE_CONNECTION_STRING}"
-
-  print_info "kubectl create secret generic azure-creds ...\n"
-  
-  ${kubectl_cmd} create secret generic azure-creds \
-    --from-literal=AZURE_STORAGE_ACCOUNT=${AZURE_STORAGE_ACCOUNT} \
-    --from-literal=AZURE_STORAGE_KEY=${AZURE_STORAGE_KEY} \
-    --from-literal=AZURE_STORAGE_SAS_TOKEN=${AZURE_STORAGE_SAS_TOKEN} \
-    --from-literal=AZURE_CONNECTION_STRING=${AZURE_CONNECTION_STRING}
-
-  envsubst < templates/azure-template.yaml > $TMP/object_storage.yaml
-
-fi
-
-print_info "Configuration:\n"
-cat $TMP/object_storage.yaml
-
-print_command "${kubectl_cmd} apply -f $TMP/object_storage.yaml\n"
-
-${kubectl_cmd} apply -f $TMP/object_storage.yaml
+# Wait for deployment to be ready
+print_info "\n"
+print_info "Waiting for barman plugin to be ready...\n"
+${kubectl_cmd} rollout status deployment \
+  -n cnpg-system barman-cloud
