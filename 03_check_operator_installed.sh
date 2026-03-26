@@ -17,4 +17,5 @@ ${kubectl_cmd} get deploy -A | grep cnpg | awk \
   printf "%s%-14s%s %s\n", blue, "UP-TO-DATE:", reset, $4
   printf "%s%-14s%s %s\n", blue, "AVAILABLE:", reset, $5
   printf "%s%-14s%s %s\n", blue, "AGE:", reset, $6
+  printf "---\n"
 }'
