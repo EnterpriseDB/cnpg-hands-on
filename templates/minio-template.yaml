@@ -3,7 +3,7 @@ kind: ObjectStore
 metadata:
   name: object-store
 spec:
-  retentionPolicy: "${barman_retention_policy}"
+  #retentionPolicy: "${barman_retention_policy}"
   configuration:
     destinationPath: s3://${s3_bucket}/
     endpointURL: http://${local_ip}:${minio_port}

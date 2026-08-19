@@ -37,7 +37,7 @@ export kubectl_cnp="kubectl-cnpg"
 # ╰──────────────────────────────╯
 
 export cert_manager_version="v1.18.2"
-export plugin_barman_version="v0.7.0"
+export plugin_barman_version="v0.11.0"
 export barman_object_name="object-store"
 export barman_retention_policy="30d"
 
@@ -100,7 +100,8 @@ if [ "$object_storage_type" = "minio" ]; then
   export object_storage_bucket="${bucket}"
   export s3_destination_path="s3://${bucket}/"
   #export s3_endpoint_url="https://minio-api-minio.apps.cluster-cx9nq.dynamic.redhatworkshops.io"
-  export s3_endpoint_url="https://<your-end-point>"
+  #export s3_endpoint_url="https://<your-end-point>"
+  export s3_endpoint_url="https://172.17.0.2:9000"
 
 elif [ "$object_storage_type" = "aws" ]; then
 

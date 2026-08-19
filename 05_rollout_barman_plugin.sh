@@ -8,4 +8,3 @@ print_command "${kubectl_cmd} rollout status deployment \\
 
 ${kubectl_cmd} rollout status deployment \
   -n cnpg-system barman-cloud
-
